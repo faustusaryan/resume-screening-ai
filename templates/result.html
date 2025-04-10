@@ -36,7 +36,20 @@
             <div class="scroll-box border mb-3">{{ resume_text }}</div>
 
             <h5>📝 <strong>Job Description:</strong></h5>
-            <div class="scroll-box border">{{ jd_text }}</div>
+            <div class="scroll-box border mb-3">{{ jd_text }}</div>
+
+            <h5>❌ <strong>Missing Keywords:</strong></h5>
+            {% if missing_keywords %}
+                <div class="scroll-box border">
+                    <ul class="mb-0">
+                        {% for keyword in missing_keywords %}
+                            <li>{{ keyword }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <p class="text-success">✅ No missing keywords! Great alignment.</p>
+            {% endif %}
         </div>
     </div>
 </body>
