@@ -5,13 +5,11 @@ from parser import extract_text_from_pdf
 from matcher import calculate_match_score
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-123'  # Required for flash messages
+app.secret_key = 'your-secret-key-123'
 
-# Upload folders
 UPLOAD_FOLDER_RESUMES = 'resumes'
 UPLOAD_FOLDER_JD = 'job_descriptions'
 
-# Create folders if they don't exist
 os.makedirs(UPLOAD_FOLDER_RESUMES, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER_JD, exist_ok=True)
 
@@ -31,30 +29,31 @@ def upload_files():
     resume_file = request.files['resume']
     jd_file = request.files['job_description']
 
-    # Check for PDF files only
     if not (resume_file.filename.lower().endswith('.pdf') and jd_file.filename.lower().endswith('.pdf')):
         flash('Only PDF files are allowed!', 'error')
         return redirect(url_for('home'))
 
     try:
-        # Secure filenames
         resume_filename = secure_filename(resume_file.filename)
         jd_filename = secure_filename(jd_file.filename)
 
-        # Save files
         resume_path = os.path.join(app.config['UPLOAD_FOLDER_RESUMES'], resume_filename)
         jd_path = os.path.join(app.config['UPLOAD_FOLDER_JD'], jd_filename)
         
         resume_file.save(resume_path)
         jd_file.save(jd_path)
 
-        # Extract text
         resume_text = extract_text_from_pdf(resume_path)
         jd_text = extract_text_from_pdf(jd_path)
 
-        # Calculate score
         score = calculate_match_score(resume_text, jd_text)
-        return render_template('result.html', score=round(score * 100, 2))
+
+        return render_template(
+            'result.html',
+            score=round(score * 100, 2),
+            resume_text=resume_text,
+            jd_text=jd_text
+        )
 
     except Exception as e:
         flash(f'Error: {str(e)}', 'error')
