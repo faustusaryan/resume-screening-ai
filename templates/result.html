@@ -132,14 +132,14 @@
     </div>
 
     <script>
-        const score = Number("{{ score }}"); // safe string to number conversion
+        const score = Number("{{ score }}");
         const dash = 440;
         const offset = dash - (score / 100) * dash;
-    
+
         const ring = document.getElementById('progressRing');
         ring.style.strokeDasharray = dash;
         ring.style.strokeDashoffset = dash;
-    
+
         setTimeout(() => {
             ring.style.transition = 'stroke-dashoffset 1s ease-out';
             ring.style.strokeDashoffset = offset;
