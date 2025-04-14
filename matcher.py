@@ -6,4 +6,11 @@ def calculate_match_score(resume_text, jd_text):
         return 0.0
 
     matched_words = resume_words.intersection(jd_words)
-    return min(len(matched_words) / len(jd_words), 1.0)  # Caps score at 100%
+    return min(len(matched_words) / len(jd_words), 1.0)
+
+
+def get_missing_keywords(resume_text, jd_text):
+    resume_words = set(resume_text.lower().split())
+    jd_words = set(jd_text.lower().split())
+    missing = jd_words - resume_words
+    return sorted(list(missing))

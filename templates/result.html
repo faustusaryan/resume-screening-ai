@@ -16,26 +16,11 @@
     .card {
       border-radius: 16px;
     }
-    .scroll-box {
-      max-height: 200px;
-      overflow-y: auto;
-      background-color: #ffffff;
-      border-radius: 10px;
-      padding: 15px;
-      font-size: 0.95rem;
-    }
-    body.dark-mode .card,
-    body.dark-mode .scroll-box {
-      background-color: #1e1e1e;
-      color: #e0e0e0;
-    }
-
     .toggle-switch {
       position: absolute;
       top: 20px;
       right: 30px;
     }
-
     .fade-in {
       animation: fadeIn 1s ease forwards;
       opacity: 0;
@@ -53,17 +38,14 @@
       height: 160px;
       position: relative;
     }
-
     .ring svg {
-      transform: rotate(-90deg);
+      transform: rotate(0deg);
     }
-
     .ring circle {
       fill: none;
       stroke-width: 14;
       stroke-linecap: round;
     }
-
     .ring text {
       font-size: 1.8rem;
       dominant-baseline: middle;
@@ -72,80 +54,100 @@
       transform: rotate(90deg);
       transform-origin: center;
     }
-
     body.dark-mode .ring text {
       fill: #90cdf4;
+    }
+    .scroll-box {
+      max-height: 200px;
+      overflow-y: auto;
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 15px;
+      font-size: 0.95rem;
+    }
+    body.dark-mode .card,
+    body.dark-mode .scroll-box,
+    body.dark-mode table {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
     }
   </style>
 </head>
 <body class="bg-light">
 
-  <!-- 🌙 Toggle -->
+  <!-- 🌙 Dark Mode Toggle -->
   <div class="toggle-switch form-check form-switch">
     <input class="form-check-input" type="checkbox" id="modeSwitch" onclick="document.body.classList.toggle('dark-mode')">
     <label class="form-check-label" for="modeSwitch">🌙 Dark</label>
   </div>
 
   <div class="container d-flex flex-column justify-content-center align-items-center py-5">
-    <div class="card shadow p-4 fade-in w-100" style="max-width: 700px;">
-      <h2 class="text-center mb-4">📊 Resume Match Score</h2>
+    <div class="card shadow p-4 fade-in w-100" style="max-width: 800px;">
+      <h2 class="text-center mb-4">📊 Top Matching Resume</h2>
 
-      <!-- 🪄 Ring -->
+      <!-- 🪄 Animated Progress Ring -->
+      {% if top_resume %}
       <div class="d-flex justify-content-center mb-4">
         <div class="ring">
           <svg width="160" height="160">
-            <circle r="70" cx="80" cy="80" stroke="#e9ecef" />
-            <circle id="progressRing" r="70" cx="80" cy="80" stroke="#0d6efd" stroke-dasharray="440" stroke-dashoffset="440" />
-            <text x="80" y="88">{{ score }}%</text>
+            <circle r="70" cx="80" cy="80" stroke="#e9ecef"/>
+            <circle id="progressRing" r="70" cx="80" cy="80" stroke="#0d6efd" stroke-dasharray="440" stroke-dashoffset="440" transform="rotate(-90 80 80)"/>
+            <text x="80" y="88">{{ top_resume.score }}%</text>
           </svg>
         </div>
       </div>
 
-      {% if score >= 70 %}
-      <p class="text-success fw-bold text-center mt-3">Excellent match! You're a strong fit.</p>
-      {% elif score > 40 %}
-      <p class="text-warning fw-bold text-center mt-3">Moderate match. Consider improving your resume.</p>
-      {% else %}
-      <p class="text-danger fw-bold text-center mt-3">Low match. Tailor your resume to the job.</p>
+      <p class="text-center fw-bold">Best Match: {{ top_resume.filename }}</p>
       {% endif %}
 
-      <a href="/" class="btn btn-primary mt-4">🔁 Try Again</a>
       <hr class="my-4">
 
-      <h5>📄 <strong>Resume Content:</strong></h5>
-      <div class="scroll-box border mb-3">{{ resume_text }}</div>
+      <!-- 📋 Score Table -->
+      <h5 class="text-center mb-3">📁 All Resume Scores</h5>
+      <div class="table-responsive mb-4">
+        <table class="table table-striped table-bordered text-center align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Filename</th>
+              <th>Match Score (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in all_scores %}
+            <tr>
+              <td>{{ item.filename }}</td>
+              <td><strong>{{ item.score }}</strong></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
 
+      <!-- 📝 JD Content -->
       <h5>📝 <strong>Job Description:</strong></h5>
       <div class="scroll-box border mb-3">{{ jd_text }}</div>
 
-      <h5>❌ <strong>Missing Keywords:</strong></h5>
-      {% if missing_keywords %}
-      <div class="scroll-box border">
-        <ul class="mb-0">
-          {% for keyword in missing_keywords %}
-          <li>{{ keyword }}</li>
-          {% endfor %}
-        </ul>
+      <!-- ✅ Try Again -->
+      <div class="text-center">
+        <a href="/" class="btn btn-primary mt-2">🔁 Try Again</a>
       </div>
-      {% else %}
-      <p class="text-success">✅ No missing keywords! Great alignment.</p>
-      {% endif %}
     </div>
   </div>
 
+  <!-- 🔁 Animate Ring -->
   <script>
-    const score = Number("{{ score }}");
+    const score = Number("{{ top_resume.score if top_resume else 0 }}");
     const dash = 440;
     const offset = dash - (score / 100) * dash;
-
     const ring = document.getElementById('progressRing');
-    ring.style.strokeDasharray = dash;
-    ring.style.strokeDashoffset = dash;
-
-    setTimeout(() => {
-      ring.style.transition = 'stroke-dashoffset 1s ease-out';
-      ring.style.strokeDashoffset = offset;
-    }, 300);
+    if (ring) {
+      ring.style.strokeDasharray = dash;
+      ring.style.strokeDashoffset = dash;
+      setTimeout(() => {
+        ring.style.transition = 'stroke-dashoffset 1s ease-out';
+        ring.style.strokeDashoffset = offset;
+      }, 300);
+    }
   </script>
 
 </body>
