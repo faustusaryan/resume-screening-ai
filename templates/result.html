@@ -32,7 +32,6 @@
         transform: translateY(0);
       }
     }
-
     .ring {
       width: 160px;
       height: 160px;
@@ -48,11 +47,10 @@
     }
     .ring text {
       font-size: 1.8rem;
+      font-weight: bold;
       dominant-baseline: middle;
       text-anchor: middle;
       fill: #0d6efd;
-      transform: rotate(90deg);
-      transform-origin: center;
     }
     body.dark-mode .ring text {
       fill: #90cdf4;
@@ -71,6 +69,10 @@
       background-color: #1e1e1e;
       color: #e0e0e0;
     }
+    .score-text {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
   </style>
 </head>
 <body class="bg-light">
@@ -87,17 +89,16 @@
 
       <!-- 🪄 Animated Progress Ring -->
       {% if top_resume %}
-      <div class="d-flex justify-content-center mb-4">
+      <div class="d-flex flex-column align-items-center mb-4">
         <div class="ring">
           <svg width="160" height="160">
-            <circle r="70" cx="80" cy="80" stroke="#e9ecef"/>
-            <circle id="progressRing" r="70" cx="80" cy="80" stroke="#0d6efd" stroke-dasharray="440" stroke-dashoffset="440" transform="rotate(-90 80 80)"/>
-            <text x="80" y="88">{{ top_resume.score }}%</text>
+            <circle r="70" cx="80" cy="80" stroke="#e9ecef" stroke-width="14"/>
+            <circle id="progressRing" r="70" cx="80" cy="80" stroke="#0d6efd" stroke-width="14" stroke-dasharray="440" stroke-dashoffset="440" transform="rotate(-90 80 80)"/>
+            <text x="80" y="80">{{ top_resume.score }}%</text>
           </svg>
         </div>
+        <p class="text-center fw-bold mt-3 score-text">Best Match: {{ top_resume.filename }}</p>
       </div>
-
-      <p class="text-center fw-bold">Best Match: {{ top_resume.filename }}</p>
       {% endif %}
 
       <hr class="my-4">
