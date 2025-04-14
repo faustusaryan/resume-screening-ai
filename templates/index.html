@@ -35,12 +35,12 @@
 
             <form action="/upload" method="POST" enctype="multipart/form-data">
                 <div class="mb-3">
-                    <label for="resume" class="form-label">📄 Upload Resume (PDF):</label>
-                    <input class="form-control" type="file" id="resume" name="resume" required>
-                </div>
-                <div class="mb-3">
                     <label for="job_description" class="form-label">📝 Upload Job Description (PDF):</label>
                     <input class="form-control" type="file" id="job_description" name="job_description" required>
+                </div>
+                <div class="mb-3">
+                    <label for="resumes" class="form-label">📄 Upload Resumes (PDF, multiple allowed):</label>
+                    <input class="form-control" type="file" id="resumes" name="resumes" multiple required>
                 </div>
                 
                 <div class="d-grid">
