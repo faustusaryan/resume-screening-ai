@@ -1,26 +1,11 @@
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
+from sentence_transformers import SentenceTransformer, util
 
-# Define your priority keywords (customize as needed)
-PRIORITY_KEYWORDS = ['python', 'java', 'sql', 'machine learning', 'ai']
+model = SentenceTransformer('all-MiniLM-L6-v2')  # Fast + accurate
 
-def calculate_match_score(resume_text, job_desc_text):
-    # Combine job_desc + resume for TF-IDF vectorizer
-    corpus = [job_desc_text, resume_text]
-    vectorizer = TfidfVectorizer(stop_words='english')
-    tfidf_matrix = vectorizer.fit_transform(corpus)
+def get_score(resume_text, jd_text):
+    jd_embedding = model.encode(jd_text, convert_to_tensor=True)
+    resume_embedding = model.encode(resume_text, convert_to_tensor=True)
 
-    job_vector = tfidf_matrix[0]  # Job description
-    resume_vector = tfidf_matrix[1]  # Resume
-
-    similarity = cosine_similarity(job_vector, resume_vector).flatten()[0]
-
-    # Boost score for resume with priority keywords
-    extra_weight = 0
-    for keyword in PRIORITY_KEYWORDS:
-        if keyword in resume_text.lower():
-            extra_weight += 0.05  # 5% boost per keyword match
-    
-    score = min(similarity + extra_weight, 1.0)
-    return round(score, 4)  # Return decimal between 0-1
+    similarity = util.cos_sim(jd_embedding, resume_embedding)
+    score = float(similarity[0][0]) * 100  # Convert to percentage
+    return round(score, 2)
