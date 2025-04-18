@@ -7,7 +7,6 @@ from matcher import get_score
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-123')
 
-# Configurations
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'pdf'}
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
@@ -25,55 +24,54 @@ def home():
 
 @app.route('/result', methods=['POST'])
 def result():
-    if 'job_description' not in request.files or 'resumes' not in request.files:
-        flash('Please upload the job description and at least one resume.', 'error')
-        return redirect(url_for('home'))
-
-    jd_file = request.files['job_description']
+    jd_file = request.files.get('job_description')
     resume_files = request.files.getlist('resumes')
 
-    if jd_file.filename == '' or not resume_files or resume_files[0].filename == '':
-        flash('No files selected', 'error')
+    if not jd_file or jd_file.filename == '' or not resume_files or resume_files[0].filename == '':
+        flash('Please upload a job description and at least one resume (PDF).', 'error')
         return redirect(url_for('home'))
 
     if not allowed_file(jd_file.filename):
-        flash('Only PDF files are allowed!', 'error')
+        flash('Only PDF files are allowed for the job description.', 'error')
         return redirect(url_for('home'))
 
     try:
-        # Process job description
+        # Save JD
         jd_filename = secure_filename(jd_file.filename)
         jd_path = os.path.join(app.config['UPLOAD_FOLDER'], jd_filename)
         jd_file.save(jd_path)
         jd_text = extract_text_from_pdf(jd_path)
 
-        # Process resumes
         results = []
-        for file in resume_files:
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(filepath)
+        for resume_file in resume_files:
+            if resume_file and allowed_file(resume_file.filename):
+                resume_filename = secure_filename(resume_file.filename)
+                resume_path = os.path.join(app.config['UPLOAD_FOLDER'], resume_filename)
+                resume_file.save(resume_path)
 
-                resume_text = extract_text_from_pdf(filepath)
+                resume_text = extract_text_from_pdf(resume_path)
                 score = get_score(resume_text, jd_text)
 
                 results.append({
-                    'filename': filename,
-                    'score': score
+                    'filename': resume_filename,
+                    'score': round(score, 2)
                 })
 
-        # Sort results and get best match
-        results.sort(key=lambda x: x['score'], reverse=True)
-        best_match = results[0] if results else None
+        if not results:
+            flash('No valid resumes were uploaded.', 'error')
+            return redirect(url_for('home'))
 
-        return render_template('result.html', 
-                             results=results, 
-                             best_match=best_match, 
-                             jd_text=jd_text)
+        # Sort results by score
+        results.sort(key=lambda x: x['score'], reverse=True)
+        best_match = results[0]
+
+        return render_template('result.html',
+                               results=results,
+                               best_match=best_match,
+                               jd_text=jd_text)
 
     except Exception as e:
-        flash(f"Error processing files: {str(e)}", 'error')
+        flash(f"An error occurred while processing: {str(e)}", 'error')
         return redirect(url_for('home'))
 
 if __name__ == '__main__':
