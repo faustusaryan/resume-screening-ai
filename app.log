@@ -1,0 +1,29 @@
+2025-04-23 22:00:17,565 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-04-23 22:00:17,565 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-23 22:00:32,441 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-04-23 22:00:32,441 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-28 10:36:58,076 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-04-28 10:36:58,078 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-28 10:51:08,856 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-04-28 10:51:08,856 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-28 10:54:11,744 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-04-28 10:54:11,745 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-28 10:58:11,939 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-04-28 10:58:11,939 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-28 10:58:58,534 - INFO - 127.0.0.1 - - [28/Apr/2025 10:58:58] "GET / HTTP/1.1" 200 -
+2025-04-28 10:58:58,931 - INFO - 127.0.0.1 - - [28/Apr/2025 10:58:58] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-04-28 10:59:57,756 - INFO - 127.0.0.1 - - [28/Apr/2025 10:59:57] "POST /result HTTP/1.1" 200 -
+2025-04-28 11:22:41,969 - INFO - 127.0.0.1 - - [28/Apr/2025 11:22:41] "[31m[1mGET /result HTTP/1.1[0m" 405 -
+2025-04-28 11:22:42,284 - INFO - 127.0.0.1 - - [28/Apr/2025 11:22:42] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-04-28 11:23:15,672 - INFO - 127.0.0.1 - - [28/Apr/2025 11:23:15] "GET / HTTP/1.1" 200 -
+2025-04-28 11:23:27,080 - INFO - 127.0.0.1 - - [28/Apr/2025 11:23:27] "GET / HTTP/1.1" 200 -
+2025-04-28 11:24:09,071 - INFO - 127.0.0.1 - - [28/Apr/2025 11:24:09] "POST /result HTTP/1.1" 200 -
+2025-04-28 11:24:37,548 - INFO - 127.0.0.1 - - [28/Apr/2025 11:24:37] "POST /result HTTP/1.1" 200 -
+2025-04-28 11:24:51,654 - INFO - 127.0.0.1 - - [28/Apr/2025 11:24:51] "POST /result HTTP/1.1" 200 -
+2025-04-28 11:25:06,170 - INFO - 127.0.0.1 - - [28/Apr/2025 11:25:06] "POST /result HTTP/1.1" 200 -
