@@ -6,7 +6,7 @@ from collections import defaultdict
 
 # Load models globally
 transformer_model = SentenceTransformer('all-MiniLM-L6-v2')
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.load("en_core_web_md")
 
 def extract_keywords(text, top_n=20):
     """Extract top keywords using TF-IDF"""
