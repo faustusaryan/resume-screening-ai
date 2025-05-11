@@ -7,7 +7,7 @@ spacy==3.7.2
 en-core-web-md @ https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.7.1/en_core_web_md-3.7.1-py3-none-any.whl
 twilio==8.0.0
 python-dotenv==1.0.0
-huggingface-hub==0.20.3  # Explicit compatible version
-sentence-transformers==2.2.2  # Downgraded to match
-torch==2.0.1  # Required compatible version
-transformers==4.28.1  # Required compatible version
+huggingface-hub==0.20.3  # ✅ Compatible
+sentence-transformers==2.2.2  # ✅ Compatible
+torch==2.0.1  # ✅ Compatible
+transformers==4.28.1  # ✅ Compatible
